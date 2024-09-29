@@ -5,7 +5,7 @@ node() {
         dir(path: 'WebApp/WebApp'){
             sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.SqlServer')
             sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.Tools')
-            sh(script: 'dotnet tool install --global dotnet-ef')
+            env.PATH = "/var/lib/jenkins/.dotnet/tools:${env.PATH}"
 
             def currentDate = new Date().format("yyyyMMdd_HH")
             def migrationBaseName = "YourMigrationName"
