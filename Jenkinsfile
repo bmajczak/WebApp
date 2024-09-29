@@ -3,6 +3,15 @@ node() {
         sh(script: 'rm -rf WebApp')
         sh(script: 'git clone https://github.com/bmajczak/WebApp.git')
         dir(path: 'WebApp/WebApp'){
+            sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.SqlServer')
+            sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.Tools')
+
+            def currentDate = new Date().format("yyyyMMdd_HH")
+            def migrationBaseName = "YourMigrationName"
+            def migrationName = "${migrationBaseName}_${currentDate}"
+            sh(script: "dotnet ef migrations add ${migrationName}")
+            sh(script: 'dotnet ef database update')
+
             sh(script: 'dotnet publish')
         }
     }
