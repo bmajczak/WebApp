@@ -15,7 +15,7 @@ node() {
             env.PATH = "/var/lib/jenkins/.dotnet/tools:${env.PATH}"
 
             def currentDate = new Date().format("yyyyMMdd_HH")
-            def migrationBaseName = "YourMigrationName"
+            def migrationBaseName = "Migration"
             def migrationName = "${migrationBaseName}_${currentDate}"
             sh(script: "dotnet ef migrations add ${migrationName}")
             sh(script: 'dotnet ef database update')
