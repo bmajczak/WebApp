@@ -1,0 +1,11 @@
+﻿@model WebApp.Models.User
+
+<form asp-route="Add" method="post">
+    <label asp-for="Name">Name</label>
+    <input asp-for="Name"/>
+    <label asp-for="LastName">LastName</label>
+    <input asp-for="LastName" />
+    <label asp-for="Email">Email</label>
+    <input asp-for="Email"/>
+    <button type="submit">ok</button>
+</form>

@@ -1,0 +1,22 @@
+﻿@model IEnumerable<WebApp.Models.User>
+<h1>Users</h1>
+<div>
+    <form asp-controller="User" method="get">
+        <button type="submit" asp-action="Add">Add User</button>
+    </form>
+</div>
+<div>
+    <ul>
+        @foreach(var u in Model)
+        {
+            <li>
+                @u.Id @u.Name @u.LastName @u.Email
+
+                <form asp-controller="User" method="get">
+                    <button type="submit" asp-action="Update" asp-route-id="@u.Id">Update User</button>
+                    <button type="submit" asp-action="Delete" asp-route-id="@u.Id">Delete User</button>
+                </form>
+            </li>
+        }
+    </ul>
+</div>
