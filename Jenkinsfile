@@ -3,27 +3,23 @@ node() {
         sh(script: 'rm -rf WebApp')
         sh(script: 'git clone https://github.com/bmajczak/WebApp.git')
         dir(path: 'WebApp/WebApp') {
-            sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.SqlServer')
-            sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.Tools')
+            sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 8.0.8')
+            sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.Tools --version 8.0.8')
             
             def isDotNetEfInstalled = sh(script: 'dotnet tool list -g | grep dotnet-ef', returnStatus: true)
             if (isDotNetEfInstalled != 0) {
                 sh(script: 'dotnet tool install --global dotnet-ef')
             }
 
-            // Add dotnet-ef to PATH
             env.PATH = "/var/lib/jenkins/.dotnet/tools:${env.PATH}"
 
-            // Generate a unique migration name
             def currentDate = new Date().format("yyyyMMdd_HHmm")
             def migrationBaseName = "Migration"
             def migrationName = "${migrationBaseName}_${currentDate}"
 
-            // Create migration and update the database
             sh(script: "dotnet ef migrations add ${migrationName}")
             sh(script: 'dotnet ef database update')
 
-            // Publish the application
             sh(script: 'dotnet publish -c Release -o ./publish')
         }
     }
