@@ -5,6 +5,8 @@ node() {
         dir(path: 'WebApp/WebApp') {
             sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 8.0.8')
             sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.Tools --version 8.0.8')
+            sh(script: 'dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 8.0.8')
+            sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.Design --version 8.0.8')
             
             def isDotNetEfInstalled = sh(script: 'dotnet tool list -g | grep dotnet-ef', returnStatus: true)
             if (isDotNetEfInstalled != 0) {

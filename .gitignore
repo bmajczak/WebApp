@@ -1,0 +1,101 @@
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Auto-generated files
+*.sln.ide
+*.cache
+*.pdb
+*.obj
+*.exe
+*.dll
+*.pyc
+*.class
+
+# Build directories
+bin/
+obj/
+publish/
+out/
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ASP.NET Scaffolding
+.scaffolding
+
+# User secrets
+**/secrets.json
+
+# Rider files
+.idea/
+*.sln.iml
+
+# Visual Studio Code
+.vscode/
+
+# Windows image file caches
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.ico
+*.tif
+*.tiff
+
+# Log files
+*.log
+
+# npm packages
+node_modules/
+
+# ASP.NET specific files
+wwwroot/lib/
+
+# Coverage results
+coverage/
+*.coverage
+*.coveragexml
+*.coveragejson
+
+# StyleCop
+StyleCopReport.xml
+
+# Package directories
+packages/
+*.nupkg
+*.snupkg
+
+# Test result files
+TestResults/
+*.TestResult.xml
+*.trx
+*.VisualState.xml
+
+# Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+# JetBrains Rider
+.idea/
+.idea/
+
+# Localization file lock
+*.localhistory/
+
+# Dotnet Publish Output
+.publish_output/
+
+# Other files for deployment
+*.deploy.cmd
+*.pubxml
+*.pubxml.user
