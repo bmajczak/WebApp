@@ -1,53 +1,81 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebApp.Data;
 using WebApp.Models;
 using WebApp.Services.Interfaces;
+
 
 namespace WebApp.Controllers
 {
     public class UserController : Controller
     {
         private readonly IUserService _service;
-        public UserController(IUserService service)
+        private readonly AppDbContext _dbContext;
+        public UserController(IUserService service, AppDbContext dbContext)
         {
             _service = service;
+            _dbContext = dbContext;
         }
-        
-        public IActionResult Index()
+
+        public async Task<IActionResult> Index()
         {
-            var u = _service.GetUsers();
-            return View(u);
+            var users = await _service.GetUsersAsync();
+            return View(users);
         }
+
         public IActionResult Add()
         {
             return View();
         }
+
         [HttpPost]
-        public IActionResult Add(User user)
+        public async Task<IActionResult> Add(User user)
         {
-            _service.AddUser(user);
+            await _service.AddUserAsync(user);
             return RedirectToAction("Index");
         }
-        public IActionResult Update(int id)
+
+        public async Task<IActionResult> Update(string id)
         {
-            var u = _service.GetUser(id);
-            return View(u);
+            var user = await _service.GetUserAsync(id);
+            return View(user);
         }
+
         [HttpPost]
-        public IActionResult Update(User user)
+        public async Task<IActionResult> Update(User user, IFormFile profilePicture)
         {
-            _service.UpdateUser(user);
+            if (profilePicture != null && profilePicture.Length > 0)
+            {
+                using var memoryStream = new MemoryStream();
+                await profilePicture.CopyToAsync(memoryStream);
+                user.ProfilePicture = memoryStream.ToArray();
+            }
+            await _service.UpdateUserAsync(user);
+            return RedirectToAction("UserProfile", "User", new { id = user.Id });
+        }
+
+        public async Task<IActionResult> Delete(string id)
+        {
+            var user = await _service.GetUserAsync(id);
+            return View(user);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(User user)
+        {
+            await _service.DeleteUserAsync(user.Id);
+            await HttpContext.SignOutAsync("Identity.Application");
+            Response.Cookies.Delete(".AspNetCore.Identity.Application");
             return RedirectToAction("Index");
         }
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> UserProfile(string id)
         {
-            var u = _service.GetUser(id);
-            return View(u);
-        }
-        [HttpPost]
-        public IActionResult Delete(User user)
-        {
-            _service.DeleteUser(user);
-            return RedirectToAction("Index");
+            var user = await _dbContext.Users
+            .Include(u => u.Posts)
+            .FirstOrDefaultAsync(u => u.Id == id);
+
+            return View(user);
         }
     }
 }

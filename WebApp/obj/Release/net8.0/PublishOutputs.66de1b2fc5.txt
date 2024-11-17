@@ -1,7 +1,0 @@
-C:\Users\jamah\OneDrive\Pulpit\repos\publish\WebApp.exe
-C:\Users\jamah\OneDrive\Pulpit\repos\publish\appsettings.Development.json
-C:\Users\jamah\OneDrive\Pulpit\repos\publish\appsettings.json
-C:\Users\jamah\OneDrive\Pulpit\repos\publish\WebApp.dll
-C:\Users\jamah\OneDrive\Pulpit\repos\publish\WebApp.deps.json
-C:\Users\jamah\OneDrive\Pulpit\repos\publish\WebApp.runtimeconfig.json
-C:\Users\jamah\OneDrive\Pulpit\repos\publish\WebApp.pdb

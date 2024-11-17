@@ -1,14 +1,63 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<WebApp.Models.Post>
+
+@{
+    ViewData["Title"] = "Welcome to the Blogger Community";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center py-5 bg-light">
+    <h1 class="display-4 mb-3">Welcome to the Blogger Hub!</h1>
+    <p class="lead mb-4">Join a vibrant community of writers, thinkers, and storytellers. Discover inspiring content and
+        connect with passionate bloggers from around the world.</p>
+
+    <div class="d-flex justify-content-center gap-3">
+        <form asp-controller="User" asp-action="Index" method="get" class="mb-0">
+            <button type="submit" class="btn btn-primary btn-lg">Explore Bloggers</button>
+        </form>
+
+        @if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            <!-- Redirect to "Add Post" page if the user is logged in -->
+            <form asp-controller="Post" asp-action="Add" method="get" class="mb-0">
+                <button type="submit" class="btn btn-success btn-lg">Start Blogging</button>
+            </form>
+        }
+        else
+        {
+            <!-- Redirect to Login page if the user is not logged in -->
+            <form asp-controller="Account" asp-action="Login" method="get" class="mb-0">
+                <button type="submit" class="btn btn-success btn-lg">Start Blogging</button>
+            </form>
+        }
+    </div>
 </div>
 
-<div>
-    <form asp-controller="User" asp-action="Index" method="get">
-        <button type="submit">Users</button>
-    </form>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Latest Posts from Our Community</h2>
+    <p class="text-center">Read the latest insights, stories, and updates from our community of bloggers.</p>
+
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var post in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">@post.Title</h5>
+                            <p class="card-text">@post.Excerpt</p>
+                            <a asp-action="Details" asp-controller="Post" asp-route-id="@post.Id"
+                                class="btn btn-outline-primary">Read More</a>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <small>Published on @post.CreatedDate.ToString("MMMM dd, yyyy")</small>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-center">No recent posts available.</p>
+        }
+    </div>
 </div>

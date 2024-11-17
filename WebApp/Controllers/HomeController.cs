@@ -19,7 +19,12 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        return View();
+        var latestPosts = _context.Posts
+               .OrderByDescending(p => p.CreatedDate)
+               .Take(3)                               
+               .ToList();
+
+        return View(latestPosts);
     }
 
     public IActionResult Privacy()

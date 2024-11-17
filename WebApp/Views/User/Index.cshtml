@@ -1,22 +1,33 @@
 ﻿@model IEnumerable<WebApp.Models.User>
-<h1>Users</h1>
-<div>
-    <form asp-controller="User" method="get">
-        <button type="submit" asp-action="Add">Add User</button>
-    </form>
-</div>
-<div>
-    <ul>
-        @foreach(var u in Model)
-        {
-            <li>
-                @u.Id @u.Name @u.LastName @u.Email
 
-                <form asp-controller="User" method="get">
-                    <button type="submit" asp-action="Update" asp-route-id="@u.Id">Update User</button>
-                    <button type="submit" asp-action="Delete" asp-route-id="@u.Id">Delete User</button>
-                </form>
-            </li>
+<h1 class="text-center my-4">Bloggers List</h1>
+
+<div class="container">
+    <div class="row">
+        @foreach (var u in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a asp-action="UserProfile" asp-controller="User" asp-route-id="@u.Id"
+                                class="text-decoration-none text-dark">
+                                @u.Name @u.LastName
+                            </a>
+                        </h5>
+                        <p class="card-text"><strong>Email:</strong> @u.Email</p>
+                        @if (u.Interests != null)
+                        {
+                            <p class="card-text"><strong>Interests:</strong> @u.Interests</p>
+                        }
+                        @if (u.Location != null)
+                        {
+                            <p class="card-text"><strong>Location:</strong> @u.Location</p>
+                        }
+
+                    </div>
+                </div>
+            </div>
         }
-    </ul>
+    </div>
 </div>

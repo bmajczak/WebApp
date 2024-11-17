@@ -1,0 +1,11 @@
+﻿@model WebApp.Models.Post
+<form asp-action="Update" method="post">
+    <label asp-for="Title" class="control-label">Title</label>
+    <input asp-for="Title" class="form-control" />
+    <label asp-for="Excerpt" class="control-label">Excerpt</label>
+    <input asp-for="Excerpt" class="form-control" />
+    <label asp-for="Content" class="control-label">Content</label>
+    <textarea asp-for="Content" class="form-control"></textarea>
+    <input type="hidden" asp-for="UserId" />
+    <button type="submit" class="btn btn-success btn-lg btn-block mt-3">Update</button>
+</form>

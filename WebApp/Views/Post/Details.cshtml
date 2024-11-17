@@ -1,0 +1,20 @@
+﻿@model WebApp.Models.Post
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h1>@Model.Title</h1>
+
+        <p><strong>Posted on:</strong> @Model.CreatedDate.ToString("dd MMMM yyyy")</p>
+
+        <p><strong>Excerpt:</strong></p>
+        <p>@Model.Excerpt</p>
+
+        <p><strong>Content:</strong></p>
+        <div>@Html.Raw(Model.Content)</div>
+    </div>
+</div>
+<a asp-action="UserProfile" asp-controller="User" asp-route-id="@Model.UserId">Back to Posts</a>

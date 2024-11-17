@@ -1,0 +1,83 @@
+﻿@model WebApp.Models.User
+
+@{
+    ViewData["Title"] = Model.Name + "'s Profile";
+}
+
+<h1>@Model.Name's Profile</h1>
+
+@if (User.Identity!.IsAuthenticated && User.Identity.Name == Model.UserName)
+{
+    <div class="mb-4">
+        <form asp-controller="User" method="get" class="d-inline">
+            <button type="submit" asp-action="Update" asp-route-id="@Model.Id" class="btn btn-warning me-2">Update
+                User</button>
+        </form>
+        <form asp-controller="User" method="get" class="d-inline">
+            <button type="submit" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete User</button>
+        </form>
+    </div>
+}
+
+<div class="profile-header d-flex align-items-center mb-5">
+    <div class="me-4">
+        @if (Model.ProfilePicture != null)
+        {
+            <img src="data:image/png;base64,@Convert.ToBase64String(Model.ProfilePicture)" alt="Profile Picture"
+                class="profile-pic rounded-circle" style="width: 150px; height: 150px; object-fit: cover;" />
+        }
+        else
+        {
+            <p>No profile picture available</p>
+        }
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2>@Model.Name @Model.LastName</h2>
+            <p><strong>Email:</strong> @Model.Email</p>
+            <p><strong>Location:</strong> @Model.Location</p>
+            <p><strong>Interests:</strong> @Model.Interests</p>
+            <p><strong>Bio:</strong> @Model.Bio</p>
+        </div>
+    </div>
+</div>
+
+@if (User.Identity!.IsAuthenticated && User.Identity.Name == Model.UserName)
+{
+    <form method="get" class="mb-4">
+        <button type="submit" asp-action="Add" asp-controller="Post" class="btn btn-success">Add Post</button>
+    </form>
+}
+
+<div class="posts-section">
+    @if (Model.Posts == null || !Model.Posts.Any())
+    {
+        <h3>No posts yet</h3>
+    }
+    else
+    {
+        <h3>Posts</h3>
+
+        @foreach (var p in Model.Posts.OrderByDescending(post => post.CreatedDate))
+        {
+            <div class="post-item mb-4 p-3 border rounded">
+                <h4>@p.Title <span class="text-muted">@p.CreatedDate.ToShortDateString()</span></h4>
+                <p>@p.Excerpt <a asp-action="Details" asp-controller="Post" asp-route-id="@p.Id">Read More</a></p>
+
+                @if (User.Identity!.IsAuthenticated && User.Identity.Name == Model.UserName)
+                {
+                    <div class="d-flex">
+                        <form method="get" class="me-2">
+                            <button type="submit" asp-action="Update" asp-controller="Post" asp-route-id="@p.Id"
+                                class="btn btn-info btn-sm">Update</button>
+                        </form>
+                        <form method="get">
+                            <button type="submit" asp-action="Delete" asp-controller="Post" asp-route-id="@p.Id"
+                                class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>
