@@ -7,7 +7,12 @@ node() {
             sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.Tools --version 8.0.8')
             sh(script: 'dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 8.0.8')
             sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.Design --version 8.0.8')
-            
+            sh(script: 'dotnet add package xunit')
+            sh(script: 'dotnet add Tests package xunit --version 2.9.2')
+            sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.InMemory --version 8.0.8')
+            sh(script: 'dotnet add package Microsoft.AspNetCore.Mvc.Testing --version 8.0.8')
+            sh(script: 'dotnet add package xunit.runner.visualstudio --version 2.8.2')
+
             def isDotNetEfInstalled = sh(script: 'dotnet tool list -g | grep dotnet-ef', returnStatus: true)
             if (isDotNetEfInstalled != 0) {
                 sh(script: 'dotnet tool install --global dotnet-ef')
@@ -28,7 +33,7 @@ node() {
 
     stage(name: "Test") {
         dir(path: 'WebApp/WebApp') {
-            sh(script: 'dotnet test Tests ./tests/YourTestProject/YourTestProject.csproj --no-build')
+            sh(script: 'dotnet test Tests ./Tests/Tests.csproj --no-build')
         }
     }
 
