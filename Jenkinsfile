@@ -8,6 +8,7 @@ node() {
             sh(script: 'dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 8.0.8')
             sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.Design --version 8.0.8')
             sh(script: 'dotnet add package xunit')
+            sh(script: 'dotnet add ./Tests/Tests.csproj package xunit')
             sh(script: 'dotnet add Tests package xunit --version 2.9.2')
             sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.InMemory --version 8.0.8')
             sh(script: 'dotnet add package Microsoft.AspNetCore.Mvc.Testing --version 8.0.8')
