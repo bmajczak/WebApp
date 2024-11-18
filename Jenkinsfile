@@ -33,6 +33,7 @@ node() {
 
     stage(name: "Test") {
         dir(path: 'WebApp/WebApp') {
+            sh(script: 'dotnet build ./Tests/Tests.csproj --configuration Release')
             sh(script: 'dotnet test ./Tests/Tests.csproj --no-build --verbosity normal')
         }
     }
