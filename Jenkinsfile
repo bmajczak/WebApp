@@ -7,9 +7,6 @@ node() {
             sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.Tools --version 8.0.8')
             sh(script: 'dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 8.0.8')
             sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.Design --version 8.0.8')
-            sh(script: 'dotnet add package xunit')
-            sh(script: 'dotnet add ./Tests/Tests.csproj package xunit')
-            sh(script: 'dotnet add Tests package xunit --version 2.9.2')
             sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.InMemory --version 8.0.8')
             sh(script: 'dotnet add package Microsoft.AspNetCore.Mvc.Testing --version 8.0.8')
             sh(script: 'dotnet add package xunit.runner.visualstudio --version 2.8.2')
@@ -24,7 +21,6 @@ node() {
             def currentDate = new Date().format("yyyyMMdd_HHmm")
             def migrationBaseName = "Migration"
             def migrationName = "${migrationBaseName}_${currentDate}"
-
             sh(script: "dotnet ef migrations add ${migrationName}")
             sh(script: 'dotnet ef database update')
 
@@ -35,7 +31,8 @@ node() {
     stage(name: "Test") {
         dir(path: 'WebApp/WebApp') {
             sh(script: 'dotnet build ./Tests/Tests.csproj --configuration Release')
-            sh(script: 'dotnet test ./Tests/Tests.csproj --no-build --verbosity normal')
+            
+            sh(script: 'dotnet test ./Tests/Tests.csproj --no-build --configuration Release --verbosity normal')
         }
     }
 
