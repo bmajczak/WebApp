@@ -33,7 +33,7 @@ node() {
 
     stage(name: "Test") {
         dir(path: 'WebApp/WebApp') {
-            sh(script: 'dotnet test Tests ./Tests/Tests.csproj --no-build')
+            sh(script: 'dotnet test ./Tests/Tests.csproj --no-build --verbosity normal')
         }
     }
 
