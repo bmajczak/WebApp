@@ -26,6 +26,12 @@ node() {
         }
     }
 
+    stage(name: "Test") {
+        dir(path: 'WebApp/WebApp') {
+            sh(script: 'dotnet test Tests ./tests/YourTestProject/YourTestProject.csproj --no-build')
+        }
+    }
+
     stage(name: 'Deployment') {
         dir(path: 'WebApp/WebApp') {
             sshagent(credentials: ['app01-key']) {
