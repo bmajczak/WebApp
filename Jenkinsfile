@@ -1,4 +1,6 @@
+properties([pipelineTriggers([githubPush()])])
 node() {
+    git url: 'https://github.com/bmajczak/WebApp.git', branch: 'main'
     stage(name: "Build") {
         sh(script: 'rm -rf WebApp')
         sh(script: 'git clone https://github.com/bmajczak/WebApp.git')
