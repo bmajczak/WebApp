@@ -48,7 +48,7 @@ node() {
                 
                 sh(script: 'ssh -o StrictHostKeyChecking=no vagrant@app02 "sudo systemctl stop webapp.service"')
                 sh(script: 'ssh -o StrictHostKeyChecking=no vagrant@app02 "sudo rm -rf /var/www/app/*"')
-                sh(script: 'scp -o StrictHostKeyChecking=no -r ./publish/* vagrant@app01:/var/www/app/')
+                sh(script: 'scp -o StrictHostKeyChecking=no -r ./publish/* vagrant@app02:/var/www/app/')
                 sh(script: 'ssh -o StrictHostKeyChecking=no vagrant@app02 "sudo systemctl start webapp.service"')
             }
         }
