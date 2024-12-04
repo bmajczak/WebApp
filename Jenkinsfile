@@ -1,6 +1,6 @@
 properties([pipelineTriggers([githubPush()])])
 node() {
-    git url: 'https://github.com/bmajczak/WebApp.git', branch: 'main'
+    git url: 'https://github.com/bmajczak/WebApp.git', branch: 'laptop'
     stage(name: "Build") {
         sh(script: 'rm -rf WebApp')
         sh(script: 'git clone https://github.com/bmajczak/WebApp.git')
@@ -48,10 +48,10 @@ node() {
                 sh(script: 'scp -o StrictHostKeyChecking=no -r ./publish/* vagrant@app01:/var/www/app/')
                 sh(script: 'ssh -o StrictHostKeyChecking=no vagrant@app01 "sudo systemctl start webapp.service"')
                 
-                sh(script: 'ssh -o StrictHostKeyChecking=no vagrant@app02 "sudo systemctl stop webapp.service"')
-                sh(script: 'ssh -o StrictHostKeyChecking=no vagrant@app02 "sudo rm -rf /var/www/app/*"')
-                sh(script: 'scp -o StrictHostKeyChecking=no -r ./publish/* vagrant@app02:/var/www/app/')
-                sh(script: 'ssh -o StrictHostKeyChecking=no vagrant@app02 "sudo systemctl start webapp.service"')
+                // sh(script: 'ssh -o StrictHostKeyChecking=no vagrant@app02 "sudo systemctl stop webapp.service"')
+                // sh(script: 'ssh -o StrictHostKeyChecking=no vagrant@app02 "sudo rm -rf /var/www/app/*"')
+                // sh(script: 'scp -o StrictHostKeyChecking=no -r ./publish/* vagrant@app02:/var/www/app/')
+                // sh(script: 'ssh -o StrictHostKeyChecking=no vagrant@app02 "sudo systemctl start webapp.service"')
             }
         }
     }
