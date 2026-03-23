@@ -8,7 +8,7 @@ public class Post
     public string? Title { get; set; }
     public string? Excerpt { get; set; }
     public string? Content {get; set;}
-    public DateTime CreatedDate { get; set; }
+    public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     public string UserId { get; set; } = null!;
     public User User { get; set; } = null!;
 }

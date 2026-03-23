@@ -27,7 +27,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public ActionResult Add(Post post)
         {
-            post.CreatedDate = DateTime.Now;
+            post.CreatedDate = DateTime.UtcNow;
             _dbContext.Posts.Add(post);
             _dbContext.SaveChanges();
             return RedirectToAction("UserProfile", "User", new { id = post.UserId });
@@ -50,7 +50,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public ActionResult Update(Post post)
         {
-            post.CreatedDate = DateTime.Now;
+            post.CreatedDate = DateTime.UtcNow;
             _dbContext.Posts.Update(post);
             _dbContext.SaveChanges();
             return RedirectToAction("UserProfile", "User", new { id = post.UserId });
