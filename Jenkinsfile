@@ -1,61 +1,65 @@
 properties([pipelineTriggers([githubPush()])])
-node() {
-    git url: 'https://github.com/bmajczak/WebApp.git', branch: 'main'
-    stage(name: "Build") {
-        sh(script: 'rm -rf WebApp')
-        sh(script: 'git clone https://github.com/bmajczak/WebApp.git')
-        dir(path: 'WebApp/WebApp') {
-            // EF Core + PostgreSQL
-            sh(script: 'dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL --version 8.0.8')
-            sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.Tools --version 8.0.8')
-            sh(script: 'dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 8.0.8')
-            sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.Design --version 8.0.8')
-            sh(script: 'dotnet add package Microsoft.EntityFrameworkCore.InMemory --version 8.0.8')
-            sh(script: 'dotnet add package Microsoft.AspNetCore.Mvc.Testing --version 8.0.8')
-            
-            // Testy
-            sh(script: 'dotnet add Tests package xunit --version 2.9.2')
-            sh(script: 'dotnet add Tests package xunit.runner.visualstudio --version 2.8.2')
 
-            // dotnet-ef
-            def isDotNetEfInstalled = sh(script: 'dotnet tool list -g | grep dotnet-ef', returnStatus: true)
-            if (isDotNetEfInstalled != 0) {
-                sh(script: 'dotnet tool install --global dotnet-ef --version 8.0.8')
+node() {
+
+    stage('Checkout') {
+        git url: 'https://github.com/bmajczak/WebApp.git', branch: 'main'
+    }
+
+    stage('Build') {
+        dir('WebApp/WebApp') {
+
+            // Pakiety (PostgreSQL + EF Core 8.0.8)
+            sh 'dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL --version 8.0.8'
+            sh 'dotnet add package Microsoft.EntityFrameworkCore.Tools --version 8.0.8'
+            sh 'dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 8.0.8'
+            sh 'dotnet add package Microsoft.EntityFrameworkCore.Design --version 8.0.8'
+
+            // Build
+            sh 'dotnet restore'
+            sh 'dotnet build -c Release'
+        }
+    }
+
+    stage('Test') {
+        dir('WebApp/WebApp') {
+            sh 'dotnet test ./Tests/Tests.csproj --configuration Release'
+        }
+    }
+
+    stage('Database Migration') {
+        dir('WebApp/WebApp') {
+
+            // upewnij się że dotnet-ef istnieje
+            def isInstalled = sh(script: 'dotnet tool list -g | grep dotnet-ef', returnStatus: true)
+            if (isInstalled != 0) {
+                sh 'dotnet tool install --global dotnet-ef --version 8.0.8'
             }
 
             env.PATH = "/var/lib/jenkins/.dotnet/tools:${env.PATH}"
 
-            // Generowanie migracji
-            def currentDate = new Date().format("yyyyMMdd_HHmm")
-            def migrationBaseName = "InitialCreate"
-            def migrationName = "${migrationBaseName}_${currentDate}"
-            sh(script: "dotnet ef migrations add ${migrationName}")
-            sh(script: 'dotnet ef database update')
-
-            // Publikacja
-            sh(script: 'dotnet publish -c Release -o ./publish')
+            sh 'dotnet ef database update'
         }
     }
 
-    stage(name: "Test") {
-        dir(path: 'WebApp/WebApp') {
-            sh(script: 'dotnet build ./Tests/Tests.csproj --configuration Release')
-            sh(script: 'dotnet test ./Tests/Tests.csproj --no-build --configuration Release --verbosity normal')
+    stage('Publish') {
+        dir('WebApp/WebApp') {
+            sh 'dotnet publish -c Release -o ./publish'
         }
     }
 
-    stage(name: 'Deployment') {
-        dir(path: 'WebApp/WebApp') {
+    stage('Deploy') {
+        dir('WebApp/WebApp') {
             sshagent(credentials: ['app01-key', 'app02-key']) {
-                sh(script: 'ssh -o StrictHostKeyChecking=no vagrant@app01 "sudo systemctl stop webapp.service"')
-                sh(script: 'ssh -o StrictHostKeyChecking=no vagrant@app01 "sudo rm -rf /var/www/app/*"')
-                sh(script: 'scp -o StrictHostKeyChecking=no -r ./publish/* vagrant@app01:/var/www/app/')
-                sh(script: 'ssh -o StrictHostKeyChecking=no vagrant@app01 "sudo systemctl start webapp.service"')
-                
-                sh(script: 'ssh -o StrictHostKeyChecking=no vagrant@app02 "sudo systemctl stop webapp.service"')
-                sh(script: 'ssh -o StrictHostKeyChecking=no vagrant@app02 "sudo rm -rf /var/www/app/*"')
-                sh(script: 'scp -o StrictHostKeyChecking=no -r ./publish/* vagrant@app02:/var/www/app/')
-                sh(script: 'ssh -o StrictHostKeyChecking=no vagrant@app02 "sudo systemctl start webapp.service"')
+
+                def servers = ['app01', 'app02']
+
+                for (server in servers) {
+                    sh "ssh -o StrictHostKeyChecking=no vagrant@${server} \"sudo systemctl stop webapp.service\""
+                    sh "ssh -o StrictHostKeyChecking=no vagrant@${server} \"sudo rm -rf /var/www/app/*\""
+                    sh "scp -o StrictHostKeyChecking=no -r ./publish/* vagrant@${server}:/var/www/app/"
+                    sh "ssh -o StrictHostKeyChecking=no vagrant@${server} \"sudo systemctl start webapp.service\""
+                }
             }
         }
     }
