@@ -14,6 +14,7 @@ node() {
 
     stage('Publish') {
         dir('WebApp') {
+            sh 'rm -rf obj bin publish'
             sh 'dotnet publish WebApp.csproj -c Release -o ./publish'
         }
     }
