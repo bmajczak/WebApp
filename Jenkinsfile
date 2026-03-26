@@ -7,7 +7,7 @@ node() {
     }
 
     stage('Build') {
-        dir('WebApp/WebApp') {
+        dir('WebApp') {
 
             // Pakiety (PostgreSQL + EF Core 8.0.8)
             sh 'dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL --version 8.0.8'
@@ -22,13 +22,13 @@ node() {
     }
 
     stage('Test') {
-        dir('WebApp/WebApp') {
+        dir('WebApp') {
             sh 'dotnet test ./Tests/Tests.csproj --configuration Release'
         }
     }
 
     stage('Database Migration') {
-        dir('WebApp/WebApp') {
+        dir('WebApp') {
 
             // upewnij się że dotnet-ef istnieje
             def isInstalled = sh(script: 'dotnet tool list -g | grep dotnet-ef', returnStatus: true)
@@ -43,13 +43,13 @@ node() {
     }
 
     stage('Publish') {
-        dir('WebApp/WebApp') {
+        dir('WebApp') {
             sh 'dotnet publish -c Release -o ./publish'
         }
     }
 
     stage('Deploy') {
-        dir('WebApp/WebApp') {
+        dir('WebApp') {
             sshagent(credentials: ['app01-key', 'app02-key']) {
 
                 def servers = ['app01', 'app02']
