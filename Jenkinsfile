@@ -21,7 +21,7 @@ node() {
 
     stage('Publish') {
         dir('WebApp') {
-            sh 'dotnet publish -c Release -o ./publish'
+            sh 'dotnet publish WebApp.csproj -c Release -o ./publish'
         }
     }
 
