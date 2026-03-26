@@ -6,13 +6,6 @@ node() {
         git url: 'https://github.com/bmajczak/WebApp.git', branch: 'postgres-docker'
     }
 
-    stage('Build') {
-        dir('WebApp') {
-            sh 'dotnet restore'
-            sh 'dotnet build WebApp.csproj -c Release'
-        }
-    }
-
     stage('Test') {
         dir('WebApp') {
             sh 'dotnet test ./Tests/Tests.csproj --configuration Release'
