@@ -9,7 +9,7 @@ node() {
     stage('Build') {
         dir('WebApp') {
             sh 'dotnet restore'
-            sh 'dotnet build -c Release'
+            sh 'dotnet build WebApp.csproj -c Release'
         }
     }
 
