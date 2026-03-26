@@ -3,7 +3,7 @@ properties([pipelineTriggers([githubPush()])])
 node() {
 
     stage('Checkout') {
-        git url: 'https://github.com/bmajczak/WebApp.git', branch: 'main'
+        git url: 'https://github.com/bmajczak/WebApp.git', branch: 'postgres-utc'
     }
 
     stage('Build') {
