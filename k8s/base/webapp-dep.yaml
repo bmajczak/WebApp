@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-postgres
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: webapp-postgres
+  template:
+    metadata:
+      labels:
+        app: webapp-postgres
+    spec:
+      containers:
+      - name: dotnet-webapp
+        image: bmajczak/webapp-postgres:latest
