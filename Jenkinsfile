@@ -35,7 +35,7 @@ node() {
 
     stage('Deploy') {
         withKubeConfig([credentialsId: 'kubeconfig-creds']) {
-            dir('k8s/ovelays/prod') {
+            dir('k8s/overlays/prod') {
                 sh(script: "kustomize edit set image bmajczak/webapp-postgres=bmajczak/webapp-postgres:${env.BUILD_NUMBER}")
                 sh(script: 'kubectl apply -k .')
             }
